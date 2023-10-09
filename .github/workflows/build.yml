@@ -222,6 +222,7 @@ jobs:
           error_message="The chart verifier returned an error when trying to obtain a verification report for the chart."
           echo "verifier_error_message=$error_message" >> $GITHUB_OUTPUT
 
+      # TODO: not continue on error, but conclusion used ?
       - name: Check Report
         id: check_report
         if: ${{ steps.check_build_required.outputs.run-build == 'true' }}
@@ -239,7 +240,7 @@ jobs:
           cd ..
 
       - name: Delete Namespace
-        if: ${{ always() && steps.oc_login.conclusion == 'success' }}
+        if: ${{ always() && steps.oc_login.outcome == 'success' }}
         env:
           KUBECONFIG: /tmp/ci-kubeconfig
         run: |
@@ -254,6 +255,7 @@ jobs:
         run: |
           ve1/bin/pr-artifact --directory=./pr --pr-number=${{ github.event.number }} --api-url=${{ github.event.pull_request._links.self.href }}
 
+      # INFO: git show 315bf3d34fd14857cc4721fdb7e1df206a2addcb
       - name: Prepare PR comment
         id: pr_comment
         if: ${{ always() && steps.check_build_required.outputs.run-build == 'true' }}
@@ -262,7 +264,6 @@ jobs:
           PR_CONTENT_ERROR_MESSAGE: ${{ steps.check_pr_content.outputs.pr-content-error-message }}
           OWNERS_ERROR_MESSAGE: ${{ steps.check_pr_content.outputs.owners-error-message }}
           COMMUNITY_MANUAL_REVIEW: ${{ steps.check_report.outputs.community_manual_review_required }}
-          OC_INSTALL_RESULT: ${{ steps.install-oc.conclusion }}
           VERIFIER_ERROR_MESSAGE: ${{ steps.check-verifier-result.outputs.verifier_error_message }}
         run: |
           ve1/bin/pr-comment ${{ steps.check_pr_content.outcome }} ${{ steps.run-verifier.outcome }} ${{ steps.check_report.conclusion }}
@@ -313,7 +314,7 @@ jobs:
 
       - name: Merge PR
         id: merge_pr
-        if: ${{ steps.approve_pr.conclusion == 'success' }}
+        if: ${{ steps.approve_pr.outcome == 'success' }}
         uses: pascalgn/automerge-action@v0.15.6
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}

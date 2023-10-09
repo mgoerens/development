@@ -106,12 +106,6 @@ def prepare_generic_fail_comment():
     return msg
 
 
-def prepare_oc_install_fail_comment():
-    msg = "Unfortunately the certification process failed to install OpenShift and could not complete.\n\n"
-    msg += "This problem will be addressed by maintainers and no further action is required from the submitter at this time.\n\n"
-    return msg
-
-
 def get_comment_header(issue_number):
     msg = (
         f"Thank you for submitting PR #{issue_number} for Helm Chart Certification!\n\n"
@@ -136,14 +130,12 @@ def main():
     vendor_label = open("./pr/vendor").read().strip()
     chart_name = open("./pr/chart").read().strip()
     msg = get_comment_header(issue_number)
-    oc_install_result = os.environ.get("OC_INSTALL_RESULT", False)
 
     # Handle success explicitly
     if (
         pr_content_result == "success"
         and run_verifier_result == "success"
         and verify_result == "success"
-        and oc_install_result == "success"
     ):
         msg += prepare_success_comment()
         gitutils.add_output("pr_passed", "true")
@@ -162,9 +154,6 @@ def main():
             else:
                 msg += prepare_failure_comment()
                 gitutils.add_output("pr_passed", "false")
-        elif oc_install_result == "failure":
-            msg += prepare_oc_install_fail_comment()
-            gitutils.add_output("pr_passed", "false")
         else:
             msg += prepare_generic_fail_comment()
             gitutils.add_output("pr_passed", "false")
