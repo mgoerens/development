@@ -476,6 +476,7 @@ jobs:
             --pr-number=${{ github.event.number }}
           cd ${CWD}
 
+        # This is only run if NOT WebCatalogOnly ?
       - name: Release
         if: ${{ steps.release-charts.outputs.tag != '' }}
         uses: softprops/action-gh-release@v0.1.12

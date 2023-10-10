@@ -231,6 +231,7 @@ def ensure_only_chart_is_modified(api_url, repository, branch):
                 gitutils.add_output("pr-content-error-message", msg)
                 sys.exit(1)
 
+        # TODO: Not needed as GitHub output ? Can be recreated... ?
         tag_name = f"{organization}-{chart}-{version}"
         gitutils.add_output("chart-name-with-version", tag_name)
         tag_api = f"https://api.github.com/repos/{repository}/git/ref/tags/{tag_name}"
