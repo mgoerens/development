@@ -66,6 +66,7 @@ def generate_verify_options(directory, category, organization, chart, version):
         chartprreview.write_error_log(directory, msg)
         sys.exit(1)
     else:
+        # TODO: Report isn't necesarly provided here.
         print("[INFO] report only")
         return "", "", False, False, report_provided
 

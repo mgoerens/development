@@ -42,6 +42,7 @@ from reporegex import matchers
 from tools import gitutils
 
 
+# TODO: Close duplicate of chartprreview.get_modified_charts
 def get_modified_charts(api_url):
     """Get the category, organization, chart name, and new version corresponding to
     the chart being added or modified by this PR.
@@ -221,7 +222,7 @@ def prepare_chart_tarball_for_release(
         return get_key_file(category, organization, chart, version)
     return ""
 
-
+# TODO: When we call this function, we expect the chart to be signed. We should raise an Exception if we can't find a key.
 def get_key_file(category, organization, chart, version):
     owners_path = os.path.join("charts", category, organization, chart, "OWNERS")
     key_in_owners = signedchart.get_pgp_key_from_owners(owners_path)
@@ -379,6 +380,7 @@ def create_index_from_report(category, ocp_version_range, report_path):
 
     annotations = indexannotations.getIndexAnnotations(ocp_version_range, report_path)
 
+    # TODO: Duplicate with update_chart_annotation
     print("category:", category)
     redhat_to_community = bool(os.environ.get("REDHAT_TO_COMMUNITY"))
     if category == "partners":
@@ -437,6 +439,8 @@ def set_package_digest(chart_entry):
         )
 
 
+# TODO: use "helm repo index" to generate a new index and merge it into the existing one.
+# TODO: Move "git" commands to a separate step
 def update_index_and_push(
     indexfile,
     indexdir,
