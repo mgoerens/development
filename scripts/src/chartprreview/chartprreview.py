@@ -417,22 +417,33 @@ def check_report_success(directory, api_url, report_path, report_info_path, vers
         for m in report["message"]:
             msgs.append(f"  - {m}")
         write_error_log(directory, *msgs)
+
         if vendor_type == "redhat":
             # Failure + redhat => Set redhat_to_community=True
             gitutils.add_output("redhat_to_community", "True")
-        if vendor_type == "partners" and "force-publish" not in label_names:
-            # Failure + partner + no force-publish => EXIT
+            return
+        elif vendor_type == "partners":
+            if "force-publish" not in label_names:
+                # Failure + partner + no force-publish => EXIT
+                sys.exit(1)
+            else:
+                return
+        elif vendor_type == "community":
+            if "force-publish" not in label_names:
+                gitutils.add_output("community_manual_review_required", "True")
+                sys.exit(1)
+            else:
+                return
+
+    if vendor_type == "community":
+        if "force-publish" not in label_names:
+            # Failure + community + no force-publish => set community_manual_review_required output + EXIT
+            # Requires manual review and approval, regardless of the success or failure of the report.
+            print("[INFO] Community submission requires manual approval.")
+            gitutils.add_output("community_manual_review_required", "True")
             sys.exit(1)
-
-    if vendor_type == "community" and "force-publish" not in label_names:
-        # Failure + community + no force-publish => set community_manual_review_required output + EXIT
-        # Requires manual review and approval, regardless of the success or failure of the report.
-        print("[INFO] Community submission requires manual approval.")
-        gitutils.add_output("community_manual_review_required", "True")
-        sys.exit(1)
-
-    if failures_in_report or vendor_type == "community":
-        return
+        else:
+            return
 
     if "charts.openshift.io/testedOpenShiftVersion" in annotations:
         full_version = annotations["charts.openshift.io/testedOpenShiftVersion"]
