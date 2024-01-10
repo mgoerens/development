@@ -124,7 +124,13 @@ def ensure_only_chart_is_modified(api_url, repository, branch):
         if label_name == ALLOW_CI_CHANGES:
             return
 
+    # Get list of files modified by this PR
     files = prartifact.get_modified_files(api_url)
+
+    # Validate list of modified files
+    # Should not:
+    # - relate to multiple charts
+    # -
     pattern, reportpattern, tarballpattern = get_file_match_compiled_patterns()
     matches_found = 0
     report_found = False

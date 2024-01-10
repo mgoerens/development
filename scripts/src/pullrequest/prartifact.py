@@ -145,6 +145,7 @@ def main():
 
     args = parser.parse_args()
     if args.get_files:
+        # Redundant with checkpr, already done there
         pr_files = get_modified_files(args.api_url)
         print(f"[INFO] files in pr: {pr_files}")
         gitutils.add_output("pr_files", pr_files)

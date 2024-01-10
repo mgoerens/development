@@ -1,0 +1,25 @@
+{
+    "modified_files": [
+        "coucou",
+        "tu",
+        "veux"
+    ],
+    "category": "community",
+    "organization": "redhat",
+    "version": "1.42.0",
+    "chart_name": "my_chart",
+    "web_catalog_only": false,
+    "report_info": {
+        "is_provided": true,
+        "is_signed": false,
+        "path": "voir"
+    },
+    "source_info": {
+        "is_provided": true,
+        "path": "ma"
+    },
+    "pr_info": {
+        "api_url": "bite",
+        "PRID": 42
+    }
+}
