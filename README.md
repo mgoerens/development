@@ -1,32 +1,68 @@
-# development
+# OpenShift Helm Charts
 
-This repository is used for developing and testing worklows and scripts for the charts and stage repositories.
+OpenShift Helm Charts is a repository hosting [Helm Charts](https://github.com/helm/helm) available by default with [OpenShift](https://www.openshift.com/). It contains popular technologies, tools and services. Helm Charts on this repository can be provided by the community, by partners or Red Hat. 
 
-# Release process
+Charts go through an automated Red Hat OpenShift certification workflow, which guarantees security compliance as well as best integration and experience with the platform.
 
-Periodically the workflows and scripts from this repository will be "released" into the charts for live use by chart submitters and stage repository to be used for chart submission testing. At the same time any charts added to the charts repository will be added to this repository. This is an automated process which can be started by any approver of the repository.
+## Structure of the repository
 
-To start the proecess:
-1. Modify the [release/release_info.json](https://github.com/openshift-helm-charts/development/blob/main/release/release_info.json) file with information about the release. Information includes:
-   - The version of the new release.
-   - Information to describe the content of the release.
-   - For each of the chart, development and stage repository.
-     - merges: a directory/file which is to be merged with the same directory in the other repository. 
-     - replaces : a directory/file which will be deleted from the other repository and replaced with the same directory/file from the specifying repository. This also covers new directories added.
-     - ignores : a directory or files which is part of the merge or replace but should be excluded. This also covers deleted files.
-   - For example, release/release_info.json for the charts repository specifies a merge of the charts directory. This means the charts of the charts repository will be merged into the same directory in the development repository. This effectively updates the development repository with the charts which were added since that last release.
-   - For example, release/release_info.json for the development repository specifies a replace of the scripts directory. This means the scripts directory will be deleted from the charts repository and replaced with the scripts directory and its contents from the development repository.
-   - For example, release/release_info.json for the development repository specifies an ignore of the .github/workflows/release.yml file. This means after copying the entire content of the .github directory to the charts repository the specific file will then be removed. 
-1. Create a Pull Request against the development repository containing only the release/release_info.json. The release workflow then:
-    1. Clones the development, charts and stage repositories.
-    1. Updates each of the repositories based on the content of the release/release_info.json.
-    1. Creates a pull request against the chart repository containing workflow updates from the development repository.
-        - This PR will need to be manually merged once all tests are finished and clean.
-    1. Creates a pull request against the stage repository containing workflow updates from the development repository.
-        - This PR will also need to be manually merged once all tests are finished and clean.
-    1. Creates a pull request against the development repository containing chart updates from the chart repository.
-        - This PR will be auto-merged in subsequent steps.
-    1. Assuming all is good, auto-merges the release/release_info.json pull request.
-        - Also creates a release if the development repository pull request is not required.
-    1. Detects the incoming pull request against the development repository, merges it and creates a release. 
+```
+.
+└── charts
+    └── partners
+        └── <entity>
+            └── <chart-name>
+                └── <version>
+                    └── src
+                        ├── Chart.yaml
+                        ├── README.md
+                        ├── templates
+                        │   ├── deployment.yaml
+                        │   ├── _helpers.tpl
+                        │   ├── hpa.yaml
+                        │   ├── ingress.yaml
+                        │   ├── NOTES.txt
+                        │   ├── serviceaccount.yaml
+                        │   ├── service.yaml
+                        │   └── tests
+                        │       └── test-connection.yaml
+                        ├── values.schema.json
+                        └── values.yaml
+```
 
+Where entity is the name of the company, chart-name a unique name for the chart in this repo, and version the current version of the chart. The chart can also be packaged using the following command:
+
+```bash
+$ helm package ./<chart-name>
+```
+
+Package can then be placed directly under `./charts/partners/<entity>/<chart-name>/<version>` for example: `./charts/partners/redhat/my-awsome-chart/0.1.2/my-awsome-chart-0.1.2.tgz`.
+
+## OpenShift Certification Program
+
+The certification program is a great opportunity to not only double check the integrity of the charts but also use some additional testing resources. Static verification logic will run first and then actual chart testing can be run against real OpenShift clusters. If partners prefer to run the test on their own clusters, the certification program allows for that via a test report submission. 
+
+### Contributing Helm Charts 
+
+Interested in getting your helm charts Red Hat OpenShift certified? read the [certification documention](https://github.com/openshift-helm-charts/charts/tree/main/docs)
+
+## Installation
+
+This repository comes configured by default starting with OpenShift 4.8. For earlier version of OpenShift or other Kubernetes distributions, the following command allows you to download and install all the charts from this repository via helm CLI:
+
+```bash
+$ helm repo add openshift-helm-charts https://charts.openshift.io/
+```
+
+Helm is also integrated in the [odc web terminal](https://docs.openshift.com/container-platform/latest/web_console/odc-about-web-terminal.html), you can use the helm CLI directly from there if you installed it.
+
+To install the repo to be used from the OpenShift console run the following command as and OpenShift admin:
+```bash
+$ oc apply -f https://charts.openshift.io/openshift-charts-repo.yaml
+```
+
+## Using Helm
+
+Once this repository is available and configured, Helm Charts will be available in the [OpenShift Developer Perspective](https://docs.openshift.com/container-platform/latest/applications/application_life_cycle_management/odc-working-with-helm-charts-using-developer-perspective.html)
+
+You can also use Helm CLI commands, please refere to [Using Helm Guide](https://helm.sh/docs/intro/using_helm/) for detailed instructions on how to use the Helm client.
