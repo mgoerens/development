@@ -91,10 +91,14 @@ def main():
 
     args = parser.parse_args()
 
+    # To get from extract / pre-check
     category, organization, chart, version = chartprreview.get_modified_charts(
         args.directory, args.api_url
     )
 
+    # To get from extract / pre-check:
+    # - cluster_needed
+    # - provided_report_relative_path
     (
         flags,
         chart_uri,

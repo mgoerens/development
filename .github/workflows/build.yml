@@ -1,10 +1,14 @@
 name: CI
 
+env:
+  PR_INFO_PATH: "submission.json"
+
 on:
   pull_request_target:
     types: [opened, synchronize, reopened, edited, ready_for_review, labeled]
 
 jobs:
+  
   setup:
     name: Setup CI
     runs-on: ubuntu-22.04
@@ -133,19 +137,15 @@ jobs:
           ../ve1/bin/python3 setup.py install
           cd ..
 
-      - name: Check PR Content
-        id: check_pr_content
-        if: ${{ needs.setup.outputs.run_build == 'true' }}
-        continue-on-error: true
-        env:
-          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+      - name: Extract PR information
         run: |
-          INDEX_BRANCH=$(if [ "${GITHUB_REF}" = "refs/heads/main" ]; then echo "refs/heads/gh-pages"; else echo "${GITHUB_REF}-gh-pages"; fi)
-          ./ve1/bin/check-pr-content \
-            --index-branch=${INDEX_BRANCH} \
-            --repository=${{ github.repository }} \
-            --api-url=${{ github.event.pull_request._links.self.href }}
-
+          ./ve1/bin/pre-check --api_url "${{ github.event.pull_request._links.self.href }}" --output "${{ github.env.PR_INFO_PATH }}"
+      
+      - name: Upload PR information
+        uses: actions/upload-artifact@v4
+        with:
+          name: submission
+          path: ${{ github.env.PR_INFO_PATH }}
 
   chart-verifier:
     name: Run chart-verifier
@@ -187,6 +187,14 @@ jobs:
           ../ve1/bin/python3 setup.py install
           cd ..
 
+      - name: Download submission information
+        uses: actions/download-artifact@v4
+        with:
+          name: submission
+
+      # TODO: strip all extraction of info out of this script
+      # Leave only bare check. TODO: which checks exactly ? There are numerous things being asserted.
+      # Move to pre-check ? Together with all github-script actions below. That would mean leave only "chart-verifier" related steps here, would make sense.
       - name: Check PR Content
         id: check_pr_content
         if: ${{ needs.setup.outputs.run_build == 'true' }}
@@ -254,6 +262,7 @@ jobs:
           skip_cache: true
           chart-verifier: "${{ needs.setup.outputs.verifier-action-image }}"
 
+        # See comments in report/get-verify_params.py
       - name: determine verify requirements
         if: ${{ needs.setup.outputs.run_build == 'true' }}
         id: verify_requires

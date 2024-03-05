@@ -39,3 +39,15 @@ def submission_path_matcher(
         matcher += rf"/({versionMatcher})"
 
     return matcher
+
+def owners_path_matcher(base_dir="charts", strict_categories=True):
+    relaxedCategoryMatcher = "\w+"
+    strictCategoryMatcher = "partners|redhat|community"
+
+    categoryMatcher = (
+        strictCategoryMatcher if strict_categories else relaxedCategoryMatcher
+    )
+    organizationMatcher = "[\w-]+"
+    chartMatcher = "[\w-]+"
+
+    return rf"{base_dir}/({categoryMatcher})/{organizationMatcher}/{chartMatcher}/OWNERS"

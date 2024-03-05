@@ -122,15 +122,19 @@ def get_web_catalog_only(report_data):
     return web_catalog_only
 
 
+# TODO: only used once, in another package (checkpr aka precheck). To move
 def get_package_digest(report_data):
     package_digest = None
-    try:
-        digests = report_data["metadata"]["tool"]["digests"]
-        if "package" in digests:
-            package_digest = digests["package"]
-    except Exception as err:
-        print(f"Exception getting package digest {err=}, {type(err)=}")
-        pass
+
+    with contextlib.suppress(KeyError):
+        package_digest = report_data["metadata"]["tool"]["digests"]["package"]
+    # try:
+    #     digests = report_data["metadata"]["tool"]["digests"]
+    #     if "package" in digests:
+    #         package_digest = digests["package"]
+    # except Exception as err:
+    #     print(f"Exception getting package digest {err=}, {type(err)=}")
+    #     pass
     return package_digest
 
 
