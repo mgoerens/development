@@ -470,7 +470,7 @@ jobs:
           MERGE_LABELS: ""
 
       - name: Check for PR merge
-        if: ${{ needs.setup.outputs.run_build == 'true' }}
+        if: ${{ steps.merge_pr.conclusion == 'success' }}
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
         run: |

@@ -94,7 +94,7 @@ def main():
     pr_content_error_msg = ""
     if args.check_chart_submission:
         pr_content_error_msg = craft_pr_content_error_msg(s)
-        if not pr_content_error_msg:
+        if pr_content_error_msg:
             print(pr_content_error_msg)
             gitutils.add_output("pr-content-error-message", pr_content_error_msg)
 
