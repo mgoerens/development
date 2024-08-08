@@ -84,11 +84,6 @@ def main():
 
     ### TODO: add check index
 
-    gitutils.add_output("chart_entry_name", s.chart.name)
-    gitutils.add_output("release_tag", s.chart.get_release_tag())
-    gitutils.add_output("web_catalog_only", s.is_web_catalog_only)
-    gitutils.add_output("category", s.chart.get_vendor_label())
-
     owners_error_msg = ""
     if s.modified_owners:
         # If the PR contains an OWNER file, craft a error message to be added as a comment in the PR
@@ -102,6 +97,11 @@ def main():
         if not pr_content_error_msg:
             print(pr_content_error_msg)
             gitutils.add_output("pr-content-error-message", pr_content_error_msg)
+
+    gitutils.add_output("chart_entry_name", s.chart.name)
+    gitutils.add_output("release_tag", s.chart.get_release_tag())
+    gitutils.add_output("web_catalog_only", s.is_web_catalog_only)
+    gitutils.add_output("category", s.chart.get_vendor_label())
 
     if owners_error_msg or pr_content_error_msg:
         print(f"exit with owners_error_msg={owners_error_msg}; pr_content_error_msg={pr_content_error_msg}")
