@@ -5796,6 +5796,40 @@ entries:
     urls:
     - https://github.com/openshift-helm-charts/charts/releases/download/telenity-canvas-platform-3.1.5/canvas-platform-3.1.5.tgz
     version: 3.1.5
+  testproject2:
+  - annotations:
+      charts.openshift.io/digest: sha256:9fc2f182608f70c3dd7f36b3b27be257a6fbc39642a5aa3190608fb060bc018f
+      charts.openshift.io/lastCertifiedTimestamp: '2024-08-08T08:32:18.846299+00:00'
+      charts.openshift.io/name: HashiCorp Vault
+      charts.openshift.io/provider: mgoerens
+      charts.openshift.io/providerType: partner
+      charts.openshift.io/submissionTimestamp: '2024-08-08T08:33:26.025434+00:00'
+      charts.openshift.io/supportedOpenShiftVersions: '>=4.7'
+      charts.openshift.io/testedOpenShiftVersion: '4.16'
+    apiVersion: v2
+    appVersion: 1.16.1
+    description: Official HashiCorp Vault Chart
+    digest: b5326cfddb597173e466ffdbe8ebafc58e098c59dcbf996fbde339e50d4dcc78
+    home: https://www.vaultproject.io
+    icon: https://github.com/hashicorp/vault/raw/f22d202cde2018f9455dec755118a9b84586e082/Vault_PrimaryLogo_Black.png
+    keywords:
+    - vault
+    - security
+    - encryption
+    - secrets
+    - management
+    - automation
+    - infrastructure
+    kubeVersion: '>= 1.20.0-0'
+    name: testproject2
+    sources:
+    - https://github.com/hashicorp/vault
+    - https://github.com/hashicorp/vault-helm
+    - https://github.com/hashicorp/vault-k8s
+    - https://github.com/hashicorp/vault-csi-provider
+    urls:
+    - https://github.com/mgoerens/development/releases/download/mgoerens-testproject2-0.28.2/testproject2-0.28.2.tgz
+    version: 0.28.2
   wavefronthq-wavefront:
   - annotations:
       charts.openshift.io/digest: sha256:663b50a03cf0adac0485f8731a1e0c8cb729b216f75ce9e43d1f09ffbe2faa1a
@@ -6640,4 +6674,4 @@ entries:
     urls:
     - https://github.com/openshift-helm-charts/charts/releases/download/zextras-carbonio-23.3.0/carbonio-23.3.0.tgz
     version: 23.3.0
-generated: '2023-11-16T22:26:12.823368+00:00'
+generated: '2024-08-08T08:33:25.966863+00:00'
