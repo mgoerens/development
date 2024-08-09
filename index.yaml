@@ -3138,6 +3138,55 @@ entries:
     urls:
     - https://github.com/openshift-helm-charts/charts/releases/download/kovair-kovairdevops-helm-0.1.0/kovair-kovairdevops-helm-0.1.0.tgz
     version: 0.1.0
+  kyverno:
+  - annotations:
+      artifacthub.io/changes: "- kind: added\n  description: Added possibility to
+        define additional init and sidecar container.\n- kind: added\n  description:
+        Added ability to remove namespaces from default resourceFilters list.\n- kind:
+        added\n  description: Prevent installing Kyverno in namespace kube-system.\n-
+        kind: fixed\n  description: Docs for generatecontrollerExtraResources.\n-
+        kind: changed\n  description: Enable autogen internals by default.\n- kind:
+        fixed\n  description: Self signed certificates not using SANs.\n- kind: added\n
+        \ description: Extra args support for init container.\n- kind: added\n  description:
+        Allow overriding of test security context and resource block.\n- kind: added\n
+        \ description: Added possibility to define custom image registries\n- kind:
+        added\n  description: Enable adding optional annotations to configmaps\n-
+        kind: added\n  description: Add startup probes support\n- kind: added\n  description:
+        Support extra CRD annotations\n- kind: added\n  description: Grafana dashboard.\n"
+      artifacthub.io/links: "- name: Documentation\n  url: https://kyverno.io/docs\n"
+      artifacthub.io/operator: 'false'
+      artifacthub.io/prerelease: 'false'
+      charts.openshift.io/digest: sha256:46690196b5eb280b49e7db44657bdc819a7ef169b7139135fc48725e8455ad73
+      charts.openshift.io/lastCertifiedTimestamp: '2022-12-09T13:08:59.467196+00:00'
+      charts.openshift.io/name: kyverno
+      charts.openshift.io/provider: mgoerens
+      charts.openshift.io/providerType: partner
+      charts.openshift.io/submissionTimestamp: '2024-08-09T11:05:54.857491+00:00'
+      charts.openshift.io/supportedOpenShiftVersions: '>=4.3'
+      charts.openshift.io/testedOpenShiftVersion: '4.11'
+    apiVersion: v2
+    appVersion: v1.8.4
+    description: Kubernetes Native Policy Management
+    digest: a7e2aea730d8d5b506773b0b2753329fbdf4c799325935ce53b5c7a5b0e07170
+    home: https://kyverno.io/
+    icon: https://github.com/kyverno/kyverno/raw/main/img/logo.png
+    keywords:
+    - kubernetes
+    - nirmata
+    - policy agent
+    - validating webhook
+    - admissions controller
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - name: Nirmata
+      url: https://kyverno.io/
+    name: kyverno
+    sources:
+    - https://github.com/kyverno/kyverno
+    type: application
+    urls:
+    - https://github.com/mgoerens/development/releases/download/mgoerens-kyverno-2.6.4/kyverno-2.6.4.tgz
+    version: 2.6.4
   lacework-lacework-agent:
   - annotations:
       charts.openshift.io/digest: sha256:fdc6f7c21a4f42349848a970de8a1d4a548c58e3f1366b0d3f84705a3b979a31
@@ -6707,4 +6756,4 @@ entries:
     urls:
     - https://github.com/openshift-helm-charts/charts/releases/download/zextras-carbonio-23.3.0/carbonio-23.3.0.tgz
     version: 23.3.0
-generated: '2024-08-08T09:25:41.533097+00:00'
+generated: '2024-08-09T11:05:54.796962+00:00'
