@@ -20,7 +20,7 @@ def read_submission_from_file(articact_path: str):
     return s
 
 
-def craft_pr_content_error_msg(s: submission.Submission):
+def craft_pr_content_error_msg(s: submission.Submission, repository: str):
     # Checks that this PR is a valid "Chart certification" PR
     is_valid, msg = s.is_valid_certification_submission(ignore_owners=True)
     if not is_valid:
@@ -36,6 +36,17 @@ def craft_pr_content_error_msg(s: submission.Submission):
         is_valid, msg = s.is_valid_web_catalog_only(repo_path="pr-branch")
         if not is_valid:
             return msg
+
+    index = submission.download_index_data(repository)
+    try:
+        s.chart.check_index(index)
+    except submission.HelmIndexError as e:
+        return str(e)
+
+    try:
+        s.chart.check_release_tag(repository)
+    except submission.ReleaseTagError as e:
+        return str(e)
 
     return ""
 
@@ -56,6 +67,14 @@ def main():
         type=str,
         required=True,
         help="API URL for the pull request",
+    )
+    parser.add_argument(
+        "-r",
+        "--repository",
+        dest="repository",
+        type=str,
+        required=True,
+        help="Git Repository",
     )
     parser.add_argument(
         "-o",
@@ -82,8 +101,6 @@ def main():
         gitutils.add_output("pr-content-error-message", str(e))
         sys.exit(10)
 
-    ### TODO: add check index
-
     owners_error_msg = ""
     if s.modified_owners:
         # If the PR contains an OWNER file, craft a error message to be added as a comment in the PR
@@ -92,8 +109,8 @@ def main():
         gitutils.add_output("owners-error-message", owners_error_msg)
 
     pr_content_error_msg = ""
-    if args.check_chart_submission:
-        pr_content_error_msg = craft_pr_content_error_msg(s)
+    if args.check_chart_submission: #TODO: why ?
+        pr_content_error_msg = craft_pr_content_error_msg(s, args.repository)
         if pr_content_error_msg:
             print(pr_content_error_msg)
             gitutils.add_output("pr-content-error-message", pr_content_error_msg)

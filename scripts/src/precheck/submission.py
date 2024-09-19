@@ -571,7 +571,7 @@ def get_file_type(file_path):
     return "unknwown", None
 
 
-def download_index_data(repository, branch="gh_pages"):
+def download_index_data(repository, branch="gh-pages"):
     """Download the helm repository index"""
     r = requests.get(
         f"https://raw.githubusercontent.com/{repository}/{branch}/index.yaml"
