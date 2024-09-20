@@ -5978,6 +5978,39 @@ entries:
     urls:
     - https://github.com/mgoerens/development/releases/download/mgoerens-testproject2-0.28.6/testproject2-0.28.6.tgz
     version: 0.28.6
+  - annotations:
+      charts.openshift.io/digest: sha256:3d811ff1e3d18b721e114ca409a0453547f5871e8c6a0fa470f2701bd33f8ad3
+      charts.openshift.io/lastCertifiedTimestamp: '2024-09-20T19:26:36.25125+00:00'
+      charts.openshift.io/name: HashiCorp Vault
+      charts.openshift.io/provider: mgoerens
+      charts.openshift.io/providerType: partner
+      charts.openshift.io/submissionTimestamp: '2024-09-20T19:28:05.243252+00:00'
+      charts.openshift.io/supportedOpenShiftVersions: '>=4.7'
+      charts.openshift.io/testedOpenShiftVersion: '4.16'
+    apiVersion: v2
+    appVersion: 1.16.1
+    description: Official HashiCorp Vault Chart
+    digest: e5000fe9f802913683af1d9974707a3fbf653b9d01162ffbee611f87a9c78146
+    home: https://www.vaultproject.io
+    icon: https://github.com/hashicorp/vault/raw/f22d202cde2018f9455dec755118a9b84586e082/Vault_PrimaryLogo_Black.png
+    keywords:
+    - vault
+    - security
+    - encryption
+    - secrets
+    - management
+    - automation
+    - infrastructure
+    kubeVersion: '>= 1.20.0-0'
+    name: testproject2
+    sources:
+    - https://github.com/hashicorp/vault
+    - https://github.com/hashicorp/vault-helm
+    - https://github.com/hashicorp/vault-k8s
+    - https://github.com/hashicorp/vault-csi-provider
+    urls:
+    - https://github.com/mgoerens/development/releases/download/mgoerens-testproject2-0.28.7/testproject2-0.28.7.tgz
+    version: 0.28.7
   wavefronthq-wavefront:
   - annotations:
       charts.openshift.io/digest: sha256:663b50a03cf0adac0485f8731a1e0c8cb729b216f75ce9e43d1f09ffbe2faa1a
@@ -6822,4 +6855,4 @@ entries:
     urls:
     - https://github.com/openshift-helm-charts/charts/releases/download/zextras-carbonio-23.3.0/carbonio-23.3.0.tgz
     version: 23.3.0
-generated: '2024-09-19T14:28:52.912364+00:00'
+generated: '2024-09-20T19:28:05.180652+00:00'
