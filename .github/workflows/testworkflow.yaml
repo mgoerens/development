@@ -1,0 +1,112 @@
+name: CI
+
+on:
+  milestone:
+    types: [opened]
+  workflow_dispatch:
+    inputs:
+      firstShouldFail:
+        type: boolean
+        default: false
+      secondShouldFailBefore:
+        type: boolean
+        default: false
+      secondShouldFailAfter:
+        type: boolean
+        default: false
+jobs:
+
+  setup:
+    name: "Zero"
+    runs-on: ubuntu-22.04
+
+    steps:
+      - run: echo "tamaman"
+
+  
+  validate-submission:
+    name: "First"
+    runs-on: ubuntu-22.04
+    needs: [setup]
+
+    steps:
+      - run: echo "Ah que coucou"
+
+      - run: if ${{ inputs.firstShouldFail }}; then exit 1; fi
+
+  
+  chart-verifier:
+    name: "Second"
+    runs-on: ubuntu-22.04
+    needs: [setup, validate-submission]
+
+    outputs:
+      chart-verifier-outcome: ${{ steps.chart-verifier-step.conclusion }}
+      chart-verifier-step: ${{ steps.chart-verifier-step.outputs.chart-verifier-step }}
+
+    steps:
+      - run: if ${{ inputs.secondShouldFailBefore }}; then exit 1; fi
+      - id: chart-verifier-step
+        run: echo "chart-verifier-step=Tu-veux-voir" | tee -a $GITHUB_OUTPUT
+
+      - run: if ${{ inputs.secondShouldFailAfter }}; then exit 1; fi
+
+  manage-pr:
+    name: "Third"
+    runs-on: ubuntu-22.04
+    needs: [setup, chart-verifier, validate-submission]
+  
+    # Run manage-pr as long as setup was successfull, independently from potential errors in validate-submission or chart-verifier
+    if: ${{ always() && needs.setup.result == 'success' }}
+
+    steps:
+      - run: echo "MA BITE !"
+
+      # - name: "Sanitize output in case chart-verifier job did not run"
+      #   run: |
+      #     if "${{ needs.chart-verifier.result }}" == ""; then
+      #       echo "chart-verifier-outcome=skipped" | tee -a $GITHUB_OUTPUT
+
+      - run: |
+          echo "chart verifier job result: " ${{ needs.chart-verifier.result || 'custom skip1' }}
+          echo "chart verifier step outcome: " ${{ needs.chart-verifier.outputs.chart-verifier-outcome || 'custom skip2' }}
+          echo "Value from chart verifier step: " ${{ needs.chart-verifier.outputs.chart-verifier-step || 'custom skip3' }}
+        # env:
+          # three: ${{ needs.chart-verifier.outputs.chart-verifier-step || 'custom skip3' }}
+        #   one: ${{ needs.chart-verifier.result || 'custom skip' }}
+        #   two: ${{ needs.chart-verifier.result == "toto" && "custom skip" || "tata" }}
+
+    # steps:
+    #   - run: python3 --version
+
+    #   - run: pip install environs
+
+    #   - id: my_output
+    #     run: |
+    #       cat << EOF > script1.py
+    #       import os
+
+    #       def add_output(name, value):
+    #           with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
+    #             print(f"Adding to GITHUB_OUTPUT: {name}={value}")
+    #             print(f"{name}={value}", file=fh)
+
+    #       # add_output("web_catalog_only", True)
+    #       EOF
+
+    #       python3 script1.py
+
+    #   - env:
+    #       WEB_CATALOG_ONLY: ${{ steps.my_output.outputs.web_catalog_only }}
+    #     run: |
+    #       echo $WEB_CATALOG_ONLY
+
+    #       cat << EOF > script2.py
+    #       from environs import Env
+    #       env = Env()
+    #       web_catalog_only = env.bool("WEB_CATALOG_ONLY", False)
+    #       print("type is: " + str(type(web_catalog_only)))
+    #       print("value is: " + str(web_catalog_only))
+    #       EOF
+
+    #       python3 script2.py
