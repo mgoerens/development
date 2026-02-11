@@ -1,7 +1,5 @@
 name: CI
 
-# This is a test
-
 on:
   # NOTE: There are implementation details in this workflow that require the
   # triggering event be pull_request_target. See RESOLVED_GITHUB_REF before
