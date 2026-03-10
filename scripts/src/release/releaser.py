@@ -19,7 +19,10 @@ to the charts and development repositories.
 """
 
 import argparse
+import difflib
+import fileinput
 import os
+import re
 import shutil
 import sys
 
@@ -36,6 +39,37 @@ CHARTS_PR_BRANCH_NAME_PREFIX = "Release-"
 STAGE_PR_BRANCH_BODY_PREFIX = "Workflow and script updates from development repository"
 STAGE_PR_BRANCH_NAME_PREFIX = "Release-"
 
+
+def switch_workflow_to_pull_request_target(workflow_path):
+    """Edit function
+
+    """
+    replaced = False
+    with fileinput.FileInput(workflow_path, inplace=True, backup='.bak') as file:
+        for line in file:
+            if replaced:
+                print(line, end='')
+                continue
+            new_line, count = re.subn('^  pull_request:$', r'  pull_request_target:', line)
+            if count > 0:
+                replaced = True
+            print(new_line, end='')
+
+    with open(workflow_path, encoding="utf-8") as workflow_new_content:
+        with open(f"{workflow_path}.bak", encoding="utf-8") as workflow_bkp_content:
+            diff = difflib.unified_diff(
+                workflow_new_content.readlines(),
+                workflow_bkp_content.readlines(),
+                fromfile='new',
+                tofile='bkp',
+            )
+            for line in diff:
+                print(line)
+
+# Mapping of allowed edit functions
+EDIT_FUNCTIONS = {
+    "switch_workflow_to_pull_request_target": switch_workflow_to_pull_request_target,
+}
 
 def make_required_changes(release_info_dir, origin, destination):
     print(f"Make required changes from {origin} to {destination}")
@@ -67,6 +101,20 @@ def make_required_changes(release_info_dir, origin, destination):
         else:
             print(f"Replace file {replace_this} with {with_this}")
             shutil.copy2(with_this, replace_this)
+
+    edits = release_info.get_edits(
+        from_repository, to_repository, release_info_dir
+    )
+
+    for filename, function in edits.items():
+        to_edit = f"{destination}/{filename}"
+        try:
+            edit_function = EDIT_FUNCTIONS[function]
+        except KeyError as e:
+            print(f"Edit function {function} not allowed")
+            raise e
+        print(f"Run edit function {function} on {to_edit}")
+        edit_function(to_edit)
 
     merges = release_info.get_merges(from_repository, to_repository, release_info_dir)
 
