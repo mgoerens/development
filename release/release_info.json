@@ -1,5 +1,5 @@
 {
-  "version": "1.9.1",
+  "version": "1.9.2",
   "info": [
     "Add BOT_TOKEN env var for tests to run on release (#478) by @mgoerens",
     "Fix GITHUB_TOKEN permissions for automerge (#480) by @mgoerens",
