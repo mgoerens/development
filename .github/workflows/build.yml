@@ -722,6 +722,8 @@ jobs:
             https://x-access-token:"${GITHUB_TOKEN}"@github.com/"${GITHUB_REPOSITORY}" \
             HEAD:refs/heads/${INDEX_BRANCH}
 
+          sleep 10
+
       - name: Add a GitHub comment if release has failed
         uses: actions/github-script@v7
         if: ${{ failure() && github.repository != env.SANDBOX_REPO }}
