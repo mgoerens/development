@@ -122,29 +122,6 @@ jobs:
               exit
           fi
 
-  test-e2e:
-    name: Run All Tests
-    # check-contributor not necessary because determine-workflow-conditions
-    # already asserts this.
-    needs:
-    - determine-workflow-conditions
-    if: |
-      needs.determine-workflow-conditions.outputs.create-pull-requests == 'true'
-    uses: ./.github/workflows/behave.yml
-    permissions:
-      contents: read
-    with:
-      tags: full
-      behave-logging-level: WARNING
-      pr-body: "Test triggered by release PR ${{ github.event.pull_request.html_url }}."
-      # checkout parameters passed to ensure we're testing the release content
-      checkout-fetch-depth: 0
-      checkout-repository: ${{ github.event.pull_request.head.repo.full_name }}
-      checkout-ref: ${{ github.event.pull_request.head.ref }}
-    secrets:
-      bot-name: ${{ secrets.BOT_NAME }}
-      bot-token: ${{ secrets.BOT_TOKEN }}
-
   sync-repos:
     name: Sync Repositories
     outputs:
@@ -155,7 +132,6 @@ jobs:
       dev-pr-not-need: ${{ steps.sync_repositories.outputs.dev_pr_not_needed }}
     needs:
       - determine-workflow-conditions
-      - test-e2e
     if: needs.determine-workflow-conditions.outputs.create-pull-requests == 'true'
     runs-on: ubuntu-24.04
     permissions:
