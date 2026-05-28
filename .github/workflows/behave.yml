@@ -93,7 +93,7 @@ jobs:
           set -e
           cd tests/functional/behave_features
           # Format the names of the features into a json array and prioritize the HC-16 feature by placing it at the beginning of the array.
-          features=$(find . -name '*.feature' | sed -e 's%\./%%g' | jq -R -s -c 'split("\n") | del(.[] | select(length == 0)) | sort_by(startswith("HC-16")) | reverse')
+          features=$(find . -name '*.feature' | sed -e 's%\./%%g' | jq -R -s -c 'split("\n") | del(.[] | select(length == 0)) | del(.[] | select(startswith("HC-16")))')
           [ "${features}" == "" ] && { echo "The feature file variable was empty"; exit 1 ;}
           echo "Found feature files: ${features}"
           echo "Running sanity checks."

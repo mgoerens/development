@@ -27,7 +27,7 @@ env:
   # workflow to run E2E tests.
   #
   # If unset, the default (relative to openshift-helm-charts) is used.
-  SANDBOX_REPO: ${{ vars.SANDBOX_REPO || 'openshift-helm-charts/sandbox-2025-11' }}
+  SANDBOX_REPO: mgoerens/sandbox
 
 concurrency:
   group: cert-ci-${{ github.event.pull_request.number }}
@@ -685,6 +685,8 @@ jobs:
           git push \
             https://x-access-token:"${GITHUB_TOKEN}"@github.com/"${GITHUB_REPOSITORY}" \
             HEAD:refs/heads/${INDEX_BRANCH}
+
+          sleep 10
 
       - name: Add a GitHub comment if release has failed
         if: ${{ failure() && github.repository != env.SANDBOX_REPO }}

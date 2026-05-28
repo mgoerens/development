@@ -11,8 +11,6 @@ from datetime import datetime, timezone
 import requests
 import yaml
 from environs import Env
-from requests.adapters import HTTPAdapter
-from urllib3.util import Retry
 
 try:
     from yaml import CDumper as Dumper
@@ -117,16 +115,7 @@ def set_package_digest(chart_entry, chart_url):
     """
     print("[INFO] set package digests.")
 
-    retry = Retry(
-        total=4,
-        backoff_factor=3,
-        status_forcelist=[404, 429, 500, 502, 503, 504],
-        raise_on_status=False,
-    )
-    session = requests.Session()
-    session.mount("https://", HTTPAdapter(max_retries=retry))
-
-    head = session.head(chart_url, allow_redirects=True)
+    head = requests.head(chart_url, allow_redirects=True)
     print(f"[DEBUG]: tgz url : {chart_url}")
     print(f"[DEBUG]: response code from head request: {head.status_code}")
 
